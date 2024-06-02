@@ -13,6 +13,9 @@ void main() {
     csm_DiffuseColor.rgb = mix(uColorA, uColorB, colorMix);
 
     // Mirror step
-    csm_Metalness = step(0.25, vWobble); // below 0.25, we get 0, above 0.25, we get 1
-    csm_Roughness = 1.0 - csm_Metalness;
+    // csm_Metalness = step(0.25, vWobble); // below 0.25, we get 0, above 0.25, we get 1
+    // csm_Roughness = 1.0 - csm_Metalness;
+
+    // Shiny tip
+    csm_Roughness = 1.0 - colorMix;
 }
