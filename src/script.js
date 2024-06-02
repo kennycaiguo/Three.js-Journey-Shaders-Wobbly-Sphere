@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import CustomShaderMaterial from "three-custom-shader-material/vanilla";
 import GUI from "lil-gui";
 import wobbleVertexShader from "./shaders/wobble/vertex.glsl";
@@ -69,7 +70,9 @@ gui.add(material, "thickness", 0, 10, 0.001);
 gui.addColor(material, "color");
 
 // Geometry
-const geometry = new THREE.IcosahedronGeometry(2.5, 50);
+let geometry = new THREE.IcosahedronGeometry(2.5, 50);
+geometry = mergeVertices(geometry); // replace the old geometry in order to give computeTangents function access to all of the 4 variables it needs: position, normal, uv AND index so that there are less vertices and the geometry is indexed
+geometry.computeTangents(); // all of this work is done to get the Tangent and Bi-Tangent (we only have the former for now, we need to use the cross product to get the latter) of the vertices, and this is needed in order to let the wobble effect for each possible model, not just a sphere like our example
 
 // Mesh
 const wobble = new THREE.Mesh(geometry, material);
