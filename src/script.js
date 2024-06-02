@@ -61,6 +61,17 @@ const material = new CustomShaderMaterial({
     wireframe: false,
 });
 
+const depthMaterial = new CustomShaderMaterial({
+    // CSM
+    baseMaterial: THREE.MeshDepthMaterial, // three js uses this material to calculate the SHADOWS
+    vertexShader: wobbleVertexShader,
+    fragmentShader: wobbleFragmentShader,
+    silent: true, // solves the warning on the console
+
+    // MeshDepthMaterial
+    depthPacking: THREE.RGBADepthPacking,
+});
+
 // Tweaks
 gui.add(material, "metalness", 0, 1, 0.001);
 gui.add(material, "roughness", 0, 1, 0.001);
@@ -76,6 +87,7 @@ geometry.computeTangents(); // all of this work is done to get the Tangent and B
 
 // Mesh
 const wobble = new THREE.Mesh(geometry, material);
+wobble.customDepthMaterial = depthMaterial; // fixed the shadow which is now updated from the old sphere to the wobbled sphere
 wobble.receiveShadow = true;
 wobble.castShadow = true;
 scene.add(wobble);
