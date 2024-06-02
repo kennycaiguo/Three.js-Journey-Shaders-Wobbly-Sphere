@@ -9,8 +9,15 @@ attribute vec4 tangent;
 #include ../includes/simplexNoise4d.glsl
 
 float getWobble(vec3 position) {
+    vec3 warpedPosition = position;
+
+    warpedPosition += simplexNoise4d(vec4(
+        position,
+        uTime
+    ));
+
     return simplexNoise4d(vec4(
-        position * uPositionFrequency, // XYZ (or rgb)
+        warpedPosition * uPositionFrequency, // XYZ (or rgb)
         uTime // W (or alpha)
     )) * uStrength;
 }
